@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>智光高級商工職業學校資處科一仁午餐訂餐系統</title>
+  <meta name="description" content="智光商工資處科一仁午餐訂餐系統，支援跨裝置即時推播、座位即時餐點對照圖、防誤刪密碼驗證與A4發便當列印功能。">
+  <meta name="theme-color" content="#00f5ff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="資處一仁訂餐">
+  <link rel="manifest" href="manifest.json">
+  <!-- 預先連線字型伺服器，大幅加速首頁生成與載入速度 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <!-- MQTT.js 跨裝置即時通訊庫（支援自動備援載入） -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <script>
+    if (typeof mqtt === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/5.5.0/mqtt.min.js"><\/script>');
+    }
+  </script>
+</head>
+<body>
+
+  <!-- 液態玻璃流體極光舞台 (GPU 合成層加速，全瀏覽器 60/120FPS 零負擔) -->
+  <div class="liquid-glass-stage" aria-hidden="true">
+    <div class="liquid-orb orb-cyan"></div>
+    <div class="liquid-orb orb-purple"></div>
+    <div class="liquid-orb orb-emerald"></div>
+    <div class="liquid-orb orb-amber"></div>
+    <div class="liquid-orb orb-blue"></div>
+    <div class="liquid-orb orb-rose"></div>
+    <div class="liquid-glass-grid"></div>
+  </div>
+
+  <!-- 全域頂部醒目即時推播橫幅（任何不同裝置點餐時立即彈出） -->
+  <aside id="live-broadcast-banner" class="live-broadcast-banner" aria-live="assertive" role="alert">
+    <div class="banner-content">
+      <span id="banner-badge-text" class="banner-badge">📢 即時推播</span>
+      <span id="banner-main-text">全班點餐系統已就緒</span>
+    </div>
+    <button type="button" class="banner-close-btn" onclick="closeBroadcastBanner()" title="關閉">✕</button>
+  </aside>
+
+  <!-- 系統頂部導航 -->
+  <header class="system-header">
+    <div class="header-container">
+      <div>
+        <div class="badge-tag">
+          <span>🏫 智光商工 資訊處理科</span>
+          <span>•</span>
+          <span>資處一仁專屬午餐系統</span>
+        </div>
+        <h1 class="system-title">智光高級商工職業學校資處科一仁午餐訂餐系統</h1>
+      </div>
+      <div class="header-status-group">
+        <div class="live-indicator" id="network-status-badge">
+          <span class="live-dot"></span> 跨裝置全班即時連線中
+        </div>
+        <button type="button" class="header-btn force-sync-btn" onclick="forceSyncAllDevices()" title="點擊向全班發送畫面對齊指令，馬上同步全班所有同學手機">
+          ⚡ 一鍵同步全班
+        </button>
+        <button type="button" class="header-btn push-notify-btn" id="push-notify-btn" onclick="togglePushNotification()" title="開啟後即使網站關閉也能收到新訂單通知">
+          🔕 關閉通知推播
+        </button>
+        <button type="button" class="header-btn" id="audio-toggle-btn" onclick="toggleSound()">
+          🔊 點餐音效：開
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 即時點餐快報跑馬燈列 -->
+  <div class="live-ticker-bar">
+    <span class="ticker-badge">⚡ 即時廣播</span>
+    <div class="ticker-marquee" id="live-marquee-text">
+      歡迎使用資處一仁午餐系統！手機或電腦點餐，全班裝置將同步跳通知！
+    </div>
+    <button type="button" class="header-btn ticker-drawer-btn" onclick="toggleActivityDrawer()">
+      📜 全班動態牆
+    </button>
+  </div>
+
+  <!-- 主體區域 -->
+  <main class="app-container">
+
+    <!-- 導覽分頁選項 -->
+    <nav class="nav-tabs" aria-label="分頁導航">
+      <button type="button" class="tab-button active" data-tab="order" onclick="switchTab('order')">
+        <span>🍱</span> 同學點餐<span class="desktop-text">專區</span>
+      </button>
+      <button type="button" class="tab-button" data-tab="seating" onclick="switchTab('seating')">
+        <span>🪑</span> 座位對照圖<span class="desktop-text"> (31人)</span>
+      </button>
+      <button type="button" class="tab-button" data-tab="admin" onclick="switchTab('admin')">
+        <span>📊</span> 統計管理<span class="desktop-text">面板</span>
+      </button>
+    </nav>
+
+    <!-- =========================================================
+         分頁一：學生點餐功能專區
+         ========================================================= -->
+    <section id="order-tab-content" class="card-section">
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title">🍱 午餐點餐與結帳</h2>
+          <p class="section-subtitle">每位同學限點一份餐點，送出後全班即時跳通知；若需更換請輸入座號密碼清除原餐點。</p>
+        </div>
+      </div>
+
+      <div class="order-layout-grid">
+        <!-- 左側：學生身分與密碼輸入 -->
+        <div class="student-auth-panel">
+          <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--text-main); border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+            1. 選擇學生身分
+          </h3>
+
+          <!-- 請選擇座號 -->
+          <div class="form-group">
+            <label class="form-label" for="seat-select">
+              <span>請選擇座號：</span>
+              <span class="label-hint">1 ~ 31 號</span>
+            </label>
+            <select id="seat-select" class="form-select" onchange="handleSeatChange()">
+              <option value="">-- 請選擇座號 --</option>
+            </select>
+          </div>
+
+
+          <!-- 訂餐密碼 -->
+          <div class="form-group">
+            <label class="form-label" for="order-password">
+              <span>訂餐密碼：</span>
+              <span class="label-hint" id="password-hint">密碼即為本人座號</span>
+            </label>
+            <input type="password" id="order-password" class="form-input" placeholder="請輸入您的座號作為點餐密碼" maxlength="5">
+          </div>
+
+          <!-- 當前學生點餐狀態卡片 -->
+          <div id="current-student-status" class="student-status-box" style="display: none;"></div>
+
+          <!-- 清除點餐功能（需密碼=座號防他人誤刪） -->
+          <div id="cancel-order-section" class="cancel-section" style="display: none;">
+            <label class="form-label" style="color: var(--danger-hover);">
+              <span>⚠️ 清除已點餐點 (取消點餐)：</span>
+            </label>
+            <input type="password" id="cancel-password" class="form-input" placeholder="輸入本人座號作為清除密碼" maxlength="5">
+            <button type="button" class="cancel-btn" onclick="handleCancelOrder()">
+              <span>🗑️ 確認清除點餐（釋放座位重新選餐）</span>
+            </button>
+            <div style="font-size: 0.78rem; color: var(--text-muted);">
+              * 系統設有座號密碼驗證，防止同學不小心誤刪別人的餐點。
+            </div>
+          </div>
+        </div>
+
+        <!-- 右側：餐點選擇清單（共 12 項） -->
+        <div class="menu-catalog">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">
+              2. 選擇午餐餐點 (共 12 項)
+            </h3>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">點擊即可選取</span>
+          </div>
+
+          <div id="menu-items-grid" class="menu-items-grid">
+            <!-- 由 app.js 動態渲染 12 個餐點卡片 -->
+          </div>
+
+          <!-- 總計金額與送出訂單列 -->
+          <div class="order-summary-bar">
+            <div class="summary-info">
+              <div class="summary-details">
+                座號姓名：<strong id="summary-seat-name">尚未選擇座號</strong>
+              </div>
+              <div class="summary-details">
+                所選餐點：<strong id="summary-meal-name" style="color: #6ee7b7;">未選餐點</strong>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+              <div style="text-align: right;">
+                <div style="font-size: 0.85rem; color: #94a3b8;">總計金額</div>
+                <div class="summary-total" id="summary-price-total">$0 元</div>
+              </div>
+              <button type="button" id="submit-order-btn" class="submit-btn" disabled onclick="handleSubmitOrder()">
+                <span>🚀 送出訂單</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         分頁二：資處一仁教室座位即時餐點對照圖 (共6排31人)
+         ========================================================= -->
+    <section id="seating-tab-content" class="card-section" style="display: none;">
+      <!-- A4 列印模式專用頂部抬頭 -->
+      <div class="print-banner">
+        <h1>智光高級商工職業學校資處科一仁午餐訂餐座位對照表</h1>
+        <p>課桌清楚標註每位同學點了什麼餐點,發便當對號入座最便利列印座位表(A4發便當用)</p>
+      </div>
+
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title">🪑 資處一仁教室座位即時餐點對照圖 (共6排31人)</h2>
+          <p class="section-subtitle">
+            課桌清楚標註每位同學點了什麼餐點,發便當對號入座最便利列印座位表(A4發便當用)
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="action-btn btn-print" onclick="printSeatingChart()">
+            <span>🖨️ 列印座位表 (A4發便當用)</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="seating-wrapper">
+        <!-- 講台與黑板方位 -->
+        <div class="blackboard-area">
+          <span>🏫【 講 台 與 黑 板 方 向（教室前方）】🏫</span>
+        </div>
+
+        <!-- 圖例說明 -->
+        <div class="seating-legend">
+          <div class="legend-item">
+            <span class="legend-color legend-ordered"></span>
+            <span>已點餐（顯示綠色與餐點品項）</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color legend-unorder"></span>
+            <span>尚未點餐（點擊課桌可快速幫該同學點餐）</span>
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">
+            ※ 提示：當其他同學的手機或電腦點餐時，座位卡片會即時綠光跳動閃爍！
+          </div>
+        </div>
+
+        <!-- 手機端滑動引導提示 -->
+        <div class="mobile-hint-badge">
+          👉 手機可左右滑動查看完整 6 排座位，點擊任何課桌可快速幫該同學點餐！
+        </div>
+
+        <!-- 6 排教室座位動態網格 (1~31號) -->
+        <div id="seating-classroom-grid" class="seating-classroom">
+          <!-- 由 app.js 依照 6 排渲染課桌卡片 -->
+        </div>
+
+        <!-- A4 列印模式專用底部資訊 -->
+        <div class="print-footer-summary">
+          <span id="print-footer-ordered">全班 31 人，已訂餐：0 人</span>
+          <span id="print-footer-total">總金額：$0 元</span>
+          <span>列印時間：智光高級商工職業學校資處科一仁</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         分頁三：後端管理功能與統計面板
+         ========================================================= -->
+    <section id="admin-tab-content" class="card-section" style="display: none;">
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title">📊 資處一仁訂餐即時統計資料與管理面板</h2>
+          <p class="section-subtitle">即時監控全班訂餐進度、品項彙總數量、匯出對照名冊與重置紀錄。</p>
+        </div>
+        <div class="admin-actions-bar" style="padding-top: 0;">
+          <button type="button" class="action-btn btn-print" onclick="printSeatingChart()">
+            <span>🖨️ 列印座位表</span>
+          </button>
+          <button type="button" class="action-btn btn-export" onclick="exportOrdersToCSV()">
+            <span>📥 匯出全班訂餐明細 (Excel/CSV)</span>
+          </button>
+          <button type="button" class="action-btn btn-reset" onclick="handleResetAllOrders()">
+            <span>🔄 重置所有訂餐紀錄</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-dashboard">
+        <!-- KPI 總覽 -->
+        <div class="stats-kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-title">已訂餐人數</div>
+            <div class="kpi-value highlight-green" id="kpi-ordered-count">0 / 31 人</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">全班訂餐總金額</div>
+            <div class="kpi-value highlight-amber" id="kpi-total-amount">$0 元</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">尚未點餐人數</div>
+            <div class="kpi-value" id="kpi-pending-count">31 人</div>
+          </div>
+        </div>
+
+        <!-- 未點餐提醒名單 -->
+        <div class="unorder-alert-box">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="color: #fde047; display: flex; align-items: center; gap: 6px;">
+              <span>📢 尚未點餐同學名單：</span>
+            </strong>
+            <button type="button" id="copy-unorder-btn" class="action-btn copy-unorder-glass-btn">
+              📋 複製催餐名單
+            </button>
+          </div>
+          <div id="unorder-tags-container" class="unorder-tags">
+            <!-- 動態插入未點餐標籤 -->
+          </div>
+        </div>
+
+        <!-- 餐點品項彙總排行榜 -->
+        <div class="summary-box">
+          <div class="summary-box-title">
+            <span>🍛 各餐點品項即時訂購數量統計（共 12 項）</span>
+          </div>
+          <div id="meal-stat-list" class="meal-stat-list">
+            <!-- 動態長條統計 -->
+          </div>
+        </div>
+
+        <!-- 全班訂餐明細與對照表 -->
+        <div class="summary-box">
+          <div class="summary-box-title" style="justify-content: space-between;">
+            <span>📋 全班訂餐明細與對照表 (1 ~ 31 號)</span>
+            <span style="font-size: 0.85rem; font-weight: normal; color: var(--text-muted);">
+              依座號排序完整清單
+            </span>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>座號</th>
+                  <th>座位排數</th>
+                  <th>訂購餐點</th>
+                  <th>金額</th>
+                  <th>訂餐時間</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="admin-order-table-body">
+                <!-- 動態注入 31 位同學資料 -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 全班即時動態抽屜 (Live Activity Drawer) -->
+  <aside id="activity-drawer" class="activity-drawer" aria-label="全班點餐動態">
+    <div class="activity-header">
+      <div style="font-weight: 800; font-size: 1.05rem;">⚡ 全班即時點餐動態牆</div>
+      <button type="button" class="banner-close-btn" onclick="toggleActivityDrawer()" title="關閉">✕</button>
+    </div>
+    <div id="activity-list" class="activity-list"></div>
+  </aside>
+
+
+
+  <!-- 浮動即時廣播通知容器 (Toast) -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- 主邏輯腳本 -->
+  <script src="app.js"></script>
+</body>
+</html>

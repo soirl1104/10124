@@ -1,0 +1,2312 @@
+/* =========================================================
+   智光高級商工職業學校資處科一仁午餐訂餐系統
+   風格：未來高科技透明霧面玻璃 (Cyber Neo-Frosted Glassmorphism)
+   特色：極致流暢 60FPS、輕量化毛玻璃 (Frosted Glass Buttons)、
+         微光折射邊框、觸控極速響應、全裝置零卡頓
+   ========================================================= */
+
+:root {
+  /* 高科技未來霓虹色譜 (Cyber Neon Palette) */
+  --cyber-cyan: #00f5ff;
+  --cyber-cyan-glow: rgba(0, 245, 255, 0.45);
+  --cyber-cyan-soft: rgba(0, 245, 255, 0.12);
+
+  --cyber-emerald: #00ff88;
+  --cyber-emerald-glow: rgba(0, 255, 136, 0.45);
+  --cyber-emerald-soft: rgba(0, 255, 136, 0.12);
+
+  --cyber-amber: #ffd600;
+  --cyber-amber-glow: rgba(255, 214, 0, 0.4);
+
+  --cyber-rose: #ff007f;
+  --cyber-rose-glow: rgba(255, 0, 127, 0.45);
+  --cyber-rose-soft: rgba(255, 0, 127, 0.14);
+
+  --cyber-blue: #3b82f6;
+  --cyber-indigo: #6366f1;
+
+  /* 主交互色 */
+  --primary: #00f5ff;
+  --primary-hover: #38bdf8;
+  --primary-grad: linear-gradient(135deg, rgba(0, 245, 255, 0.3) 0%, rgba(99, 102, 241, 0.3) 100%);
+  --primary-grad-hover: linear-gradient(135deg, rgba(0, 245, 255, 0.5) 0%, rgba(99, 102, 241, 0.5) 100%);
+
+  --danger: #ff007f;
+  --danger-hover: #ff4d94;
+  --success: #00ff88;
+  --success-hover: #34d399;
+
+  /* 深邃科技黑基底 (Deep Void Space) */
+  --bg-deep: #050713;
+  --bg-surface: #0a0f26;
+
+  /* 透明霧面玻璃色彩基底 (Frosted Glass Translucent Bases) */
+  --glass-header: rgba(7, 12, 30, 0.72);
+  --glass-card: rgba(11, 19, 44, 0.48);
+  --glass-card-hover: rgba(16, 28, 62, 0.62);
+  --glass-subtle: rgba(14, 23, 50, 0.38);
+  --glass-input: rgba(5, 9, 24, 0.68);
+  --glass-pill: rgba(255, 255, 255, 0.05);
+
+  /* 霧面玻璃邊框 (Frosted Light Inset Rims) */
+  --glass-border: 1px solid rgba(255, 255, 255, 0.12);
+  --glass-border-subtle: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-border-bright: 1px solid rgba(255, 255, 255, 0.24);
+  --glass-border-cyan: 1px solid rgba(0, 245, 255, 0.35);
+  --glass-border-emerald: 1px solid rgba(0, 255, 136, 0.4);
+
+  /* 立體霧面陰影 */
+  --glass-shadow: 
+    0 12px 32px -4px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+
+  --glass-shadow-hover: 
+    0 16px 40px -4px rgba(0, 0, 0, 0.65),
+    0 0 20px rgba(0, 245, 255, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.35);
+
+  --glass-btn-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+
+  /* 文字 */
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --text-bright: #ffffff;
+
+  /* 幾何微弧度（高科技科技風） */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+
+  /* 輕量毛玻璃模糊（手機 60FPS 零卡頓核心） */
+  --glass-blur: blur(14px);
+  --glass-blur-heavy: blur(20px);
+  --glass-blur-light: blur(8px);
+
+  /* 高響應動態過渡 */
+  --ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition: all 0.22s var(--ease-snappy);
+}
+
+/* 全域重設 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-deep);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  padding-bottom: 70px;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* =========================================================
+   液態玻璃流體極光舞台 (Liquid Glass Aurora Stage)
+   極致 60/120 FPS 專利級 GPU 渲染架構：
+   - 採用多重原生柔光徑向漸層，外圍 100% 自然羽化，完全「免用 CPU/GPU 即時 blur 濾鏡」
+   - 僅透過 Compositor 合成層執行 translate3d/rotate 矩陣變形
+   - 在 Safari、Chrome、Edge、Firefox 與手機瀏覽器皆零卡頓、絲滑流動！
+   ========================================================= */
+.liquid-glass-stage {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  background: 
+    radial-gradient(ellipse at 20% 10%, rgba(0, 16, 42, 1) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 90%, rgba(8, 0, 28, 1) 0%, transparent 60%),
+    #020710;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.liquid-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+/* 霓光電青液態球 - 主視覺 */
+.orb-cyan {
+  width: min(900px, 110vw);
+  height: min(900px, 110vw);
+  top: -200px;
+  left: -150px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 245, 255, 0.55) 0%,
+    rgba(0, 200, 255, 0.32) 25%,
+    rgba(0, 150, 255, 0.14) 50%,
+    rgba(0, 100, 200, 0) 72%
+  );
+  animation: floatLiquidOrb1 22s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+}
+
+/* 極光紫魅液態球 - 右側大氣層 */
+.orb-purple {
+  width: min(1000px, 120vw);
+  height: min(1000px, 120vw);
+  top: 10%;
+  right: -280px;
+  background: radial-gradient(
+    circle,
+    rgba(168, 85, 247, 0.52) 0%,
+    rgba(120, 60, 220, 0.3) 28%,
+    rgba(99, 102, 241, 0.14) 50%,
+    rgba(139, 92, 246, 0) 72%
+  );
+  animation: floatLiquidOrb2 28s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+}
+
+/* 矩陣翠綠液態球 - 底部發光 */
+.orb-emerald {
+  width: min(800px, 100vw);
+  height: min(800px, 100vw);
+  bottom: -200px;
+  left: 15%;
+  background: radial-gradient(
+    circle,
+    rgba(0, 255, 136, 0.48) 0%,
+    rgba(0, 220, 100, 0.25) 30%,
+    rgba(16, 185, 129, 0.1) 50%,
+    rgba(0, 255, 136, 0) 68%
+  );
+  animation: floatLiquidOrb3 24s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+}
+
+/* 暖金琥珀微光球 - 中心點綴 */
+.orb-amber {
+  width: min(600px, 75vw);
+  height: min(600px, 75vw);
+  top: 40%;
+  left: 30%;
+  background: radial-gradient(
+    circle,
+    rgba(251, 191, 36, 0.38) 0%,
+    rgba(240, 160, 20, 0.18) 35%,
+    rgba(245, 158, 11, 0.06) 55%,
+    rgba(251, 191, 36, 0) 72%
+  );
+  animation: floatLiquidOrb4 20s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+}
+
+/* 深藍鈷石液態球 - 右下角 */
+.orb-blue {
+  width: min(700px, 85vw);
+  height: min(700px, 85vw);
+  bottom: 5%;
+  right: -100px;
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 0.42) 0%,
+    rgba(37, 99, 235, 0.22) 32%,
+    rgba(29, 78, 216, 0.08) 55%,
+    rgba(59, 130, 246, 0) 72%
+  );
+  animation: floatLiquidOrb5 26s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+}
+
+/* 玫紅極光球 - 左中 */
+.orb-rose {
+  width: min(500px, 65vw);
+  height: min(500px, 65vw);
+  top: 55%;
+  left: -80px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 0, 127, 0.35) 0%,
+    rgba(220, 0, 100, 0.18) 35%,
+    rgba(180, 0, 80, 0.06) 55%,
+    rgba(255, 0, 127, 0) 72%
+  );
+  animation: floatLiquidOrb6 18s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+}
+
+/* 科技折射微網格（高密度全局光柵） */
+.liquid-glass-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0, 245, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 245, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 80px 80px, 80px 80px, 20px 20px, 20px 20px;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* 液態流動動畫（純 GPU 合成層變形，全瀏覽器 100% 順暢不掉幀） */
+@keyframes floatLiquidOrb1 {
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+  33%  { transform: translate3d(100px, 130px, 0) scale(1.08) rotate(30deg); }
+  66%  { transform: translate3d(60px, 220px, 0) scale(1.18) rotate(60deg); }
+  100% { transform: translate3d(-70px, 280px, 0) scale(0.95) rotate(90deg); }
+}
+
+@keyframes floatLiquidOrb2 {
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+  33%  { transform: translate3d(-110px, -80px, 0) scale(1.12) rotate(-40deg); }
+  66%  { transform: translate3d(-170px, 60px, 0) scale(1.22) rotate(-80deg); }
+  100% { transform: translate3d(-200px, 160px, 0) scale(0.9) rotate(-120deg); }
+}
+
+@keyframes floatLiquidOrb3 {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  33%  { transform: translate3d(-80px, -120px, 0) scale(1.1); }
+  66%  { transform: translate3d(80px, -160px, 0) scale(1.16); }
+  100% { transform: translate3d(160px, -60px, 0) scale(0.96); }
+}
+
+@keyframes floatLiquidOrb4 {
+  0%   { transform: translate3d(0, 0, 0) scale(0.9); opacity: 0.6; }
+  33%  { transform: translate3d(60px, -80px, 0) scale(1.1); opacity: 0.9; }
+  66%  { transform: translate3d(100px, -140px, 0) scale(1.22); opacity: 1; }
+  100% { transform: translate3d(-80px, 60px, 0) scale(1); opacity: 0.6; }
+}
+
+@keyframes floatLiquidOrb5 {
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+  50%  { transform: translate3d(-130px, -100px, 0) scale(1.15) rotate(50deg); }
+  100% { transform: translate3d(-60px, -200px, 0) scale(0.88) rotate(100deg); }
+}
+
+@keyframes floatLiquidOrb6 {
+  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0.7; }
+  50%  { transform: translate3d(100px, -80px, 0) scale(1.2); opacity: 1; }
+  100% { transform: translate3d(60px, -160px, 0) scale(0.85); opacity: 0.6; }
+}
+
+/* =========================================================
+   即時全域推播通告橫幅（透明霧面玻璃 HUD 膠囊）
+   ========================================================= */
+.live-broadcast-banner {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translate(-50%, -150%);
+  width: calc(100% - 28px);
+  max-width: 960px;
+  background: rgba(8, 14, 32, 0.85);
+  backdrop-filter: var(--glass-blur-heavy);
+  -webkit-backdrop-filter: var(--glass-blur-heavy);
+  border: 1px solid rgba(0, 245, 255, 0.5);
+  border-radius: var(--radius-pill);
+  box-shadow: 
+    0 16px 40px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba(0, 245, 255, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 10px 20px;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.38s var(--ease-snappy), opacity 0.3s ease;
+  touch-action: manipulation;
+}
+
+.live-broadcast-banner.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.banner-badge {
+  background: linear-gradient(135deg, rgba(0, 245, 255, 0.25), rgba(99, 102, 241, 0.35));
+  border: 1px solid rgba(0, 245, 255, 0.6);
+  color: var(--cyber-cyan);
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.8px;
+  box-shadow: 0 0 12px rgba(0, 245, 255, 0.3);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.banner-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.82rem;
+  transition: var(--transition);
+  touch-action: manipulation;
+}
+
+.banner-close-btn:hover {
+  background: var(--cyber-rose);
+  border-color: var(--cyber-rose);
+  box-shadow: 0 0 14px var(--cyber-rose-glow);
+}
+
+/* =========================================================
+   系統頂部導航（未來科技通透天幕 Glass Header）
+   ========================================================= */
+.system-header {
+  background: linear-gradient(180deg, rgba(8, 14, 38, 0.85) 0%, rgba(6, 11, 30, 0.72) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  padding: 20px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 12px 36px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: var(--transition);
+}
+
+.header-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .header-container {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 245, 255, 0.06);
+  padding: 4px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+  border: 1px solid rgba(0, 245, 255, 0.3);
+  color: var(--cyber-cyan);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.system-title {
+  font-size: 1.55rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ffffff 30%, #a5f3fc 70%, #93c5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 12px rgba(0, 245, 255, 0.25));
+}
+
+@media (min-width: 768px) {
+  .system-title {
+    font-size: 1.85rem;
+  }
+}
+
+.header-status-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 255, 136, 0.08);
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 0.82rem;
+  border: 1px solid rgba(0, 255, 136, 0.35);
+  color: #6ee7b7;
+  font-weight: 700;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--cyber-emerald);
+  box-shadow: 0 0 10px var(--cyber-emerald);
+  animation: pulseCyberDot 1.8s infinite;
+}
+
+@keyframes pulseCyberDot {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 14px var(--cyber-emerald); }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+/* 高科技透明霧面液態玻璃按鈕 (Cyber Liquid Glass Buttons) */
+.header-btn {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: #f1f5f9;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  font-size: 0.84rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s var(--ease-snappy), background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.3);
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.header-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: rotate(25deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+
+.header-btn:hover::after {
+  transform: translate(300%, 0) rotate(25deg);
+}
+
+.header-btn:hover {
+  background: linear-gradient(135deg, rgba(0, 245, 255, 0.25) 0%, rgba(99, 102, 241, 0.2) 100%);
+  border-color: rgba(0, 245, 255, 0.7);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 24px rgba(0, 245, 255, 0.38),
+    0 0 14px rgba(0, 245, 255, 0.25),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.55);
+}
+
+.header-btn:active {
+  transform: scale(0.96);
+}
+
+.force-sync-btn {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.16) 0%, rgba(0, 245, 255, 0.16) 100%) !important;
+  border-color: rgba(0, 255, 136, 0.5) !important;
+  color: #6ee7b7 !important;
+}
+
+.force-sync-btn:hover {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.3) 0%, rgba(0, 245, 255, 0.3) 100%) !important;
+  border-color: rgba(0, 255, 136, 0.8) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+  color: #ffffff !important;
+}
+
+/* 即時跑馬燈快報列 (Cyber Ticker Ribbon) */
+.live-ticker-bar {
+  background: rgba(7, 12, 28, 0.65);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  color: var(--text-muted);
+  padding: 9px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.86rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ticker-badge {
+  background: linear-gradient(135deg, rgba(255, 0, 127, 0.3), rgba(255, 77, 148, 0.3));
+  border: 1px solid rgba(255, 0, 127, 0.5);
+  color: #ff4d94;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.74rem;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  font-family: 'JetBrains Mono', monospace;
+  box-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
+}
+
+.ticker-marquee {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  font-weight: 600;
+  color: #a5f3fc;
+  letter-spacing: 0.3px;
+}
+
+.ticker-drawer-btn {
+  padding: 5px 14px;
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+}
+
+.ticker-drawer-btn:hover {
+  background: rgba(0, 245, 255, 0.18);
+  border-color: rgba(0, 245, 255, 0.6);
+  box-shadow: 0 0 16px rgba(0, 245, 255, 0.35);
+}
+
+/* 主容器 */
+.app-container {
+  max-width: 1280px;
+  margin: 24px auto;
+  padding: 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* =========================================================
+   導覽分頁按鈕（透明霧面玻璃膠囊 Frosted Tabs）
+   ========================================================= */
+.nav-tabs {
+  display: flex;
+  background: linear-gradient(135deg, rgba(12, 20, 48, 0.6) 0%, rgba(7, 12, 32, 0.72) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 6px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  gap: 6px;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25);
+}
+
+.tab-button {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px 18px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  font-weight: 800;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: transform 0.18s var(--ease-snappy), background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.tab-button:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+
+.tab-button:active {
+  transform: scale(0.97);
+}
+
+/* 霧面玻璃選中狀態 */
+.tab-button.active {
+  background: linear-gradient(135deg, rgba(0, 245, 255, 0.18) 0%, rgba(99, 102, 241, 0.18) 100%);
+  color: #ffffff;
+  border: 1px solid rgba(0, 245, 255, 0.6);
+  box-shadow: 
+    0 6px 20px rgba(0, 245, 255, 0.28),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+
+.desktop-text {
+  display: inline;
+}
+
+@media (max-width: 768px) {
+  .desktop-text {
+    display: none;
+  }
+}
+
+/* =========================================================
+   區塊卡片樣式（高科技透明液態玻璃面板 Liquid Cyber Glass Card）
+   ========================================================= */
+.card-section {
+  background: linear-gradient(135deg, rgba(14, 23, 56, 0.58) 0%, rgba(8, 14, 38, 0.72) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-xl);
+  padding: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 20px 50px -10px rgba(0, 0, 0, 0.65),
+    0 0 35px rgba(0, 245, 255, 0.1),
+    inset 0 1px 1px rgba(255, 255, 255, 0.35),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+/* 頂部液態極光折射微線條 (Liquid Prismatic Refraction Rim) */
+.card-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(0, 245, 255, 0.8) 25%, 
+    rgba(168, 85, 247, 0.85) 50%, 
+    rgba(0, 255, 136, 0.8) 75%, 
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .card-section {
+    padding: 34px;
+  }
+}
+
+.section-header-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (min-width: 768px) {
+  .section-header-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.section-title {
+  font-size: 1.35rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.section-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* =========================================================
+   點餐表單專區（霧面雙欄面板）
+   ========================================================= */
+.order-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 960px) {
+  .order-layout-grid {
+    grid-template-columns: 360px 1fr;
+  }
+}
+
+/* 左側：學生身分與密碼 */
+.student-auth-panel {
+  background: var(--glass-subtle);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  border: var(--glass-border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label-hint {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--cyber-cyan);
+  background: rgba(0, 245, 255, 0.08);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(0, 245, 255, 0.25);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* 霧面玻璃輸入框 */
+.form-select, .form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--glass-input);
+  font-size: 0.96rem;
+  color: #ffffff;
+  font-family: inherit;
+  transition: var(--transition);
+  outline: none;
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.form-select option {
+  background: #090e24;
+  color: #ffffff;
+  padding: 8px;
+}
+
+.form-select:focus, .form-input:focus {
+  border-color: var(--cyber-cyan);
+  background: rgba(8, 16, 38, 0.88);
+  box-shadow: 
+    0 0 0 3px rgba(0, 245, 255, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* 當前學生狀態卡片 */
+.student-status-box {
+  background: rgba(0, 255, 136, 0.06);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.status-badge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.status-tag {
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.status-tag.ordered {
+  background: rgba(0, 255, 136, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(0, 255, 136, 0.45);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.25);
+}
+
+.status-tag.unorder {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* 取消點餐區塊 */
+.cancel-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 霧面玻璃取消按鈕 */
+.cancel-btn {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 0, 127, 0.12);
+  color: #fda4af;
+  border: 1px solid rgba(255, 0, 127, 0.45);
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: transform 0.18s var(--ease-snappy), background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 
+    0 4px 14px rgba(255, 0, 127, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(255, 0, 127, 0.3) 0%, rgba(244, 63, 94, 0.35) 100%);
+  color: #ffffff;
+  border-color: #ff007f;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 24px var(--cyber-rose-glow),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+
+.cancel-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.cancel-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   右側：12 項餐點網格選單（未來科技霧面玻璃卡片）
+   ========================================================= */
+.menu-catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.menu-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+}
+
+.menu-card {
+  background: linear-gradient(145deg, rgba(14, 23, 52, 0.6) 0%, rgba(8, 14, 34, 0.75) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  padding: 16px 14px;
+  cursor: pointer;
+  transition: transform 0.18s var(--ease-snappy), border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  user-select: none;
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+.menu-card:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(145deg, rgba(20, 32, 70, 0.72) 0%, rgba(11, 18, 44, 0.82) 100%);
+  border-color: rgba(0, 245, 255, 0.5);
+  box-shadow: 
+    0 10px 28px rgba(0, 0, 0, 0.45),
+    0 0 20px rgba(0, 245, 255, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.35);
+}
+
+.menu-card:active {
+  transform: scale(0.97);
+}
+
+/* 霧面玻璃選中狀態 (Glowing Cyan Rim) */
+.menu-card.selected {
+  border-color: rgba(0, 245, 255, 0.8);
+  background: linear-gradient(145deg, rgba(0, 245, 255, 0.18) 0%, rgba(99, 102, 241, 0.14) 100%);
+  box-shadow: 
+    0 10px 28px rgba(0, 245, 255, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+
+.menu-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.menu-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 245, 255, 0.08);
+  color: var(--cyber-cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  border: 1px solid rgba(0, 245, 255, 0.25);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.menu-radio-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  background: rgba(6, 11, 26, 0.6);
+}
+
+.menu-card.selected .menu-radio-check {
+  border-color: var(--cyber-cyan);
+  background: var(--cyber-cyan);
+  box-shadow: 0 0 10px rgba(0, 245, 255, 0.6);
+}
+
+.menu-card.selected .menu-radio-check::after {
+  content: '✓';
+  color: #060913;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.menu-name {
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.35;
+}
+
+.menu-price {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #fbbf24;
+  font-family: 'Outfit', sans-serif;
+  text-shadow: 0 2px 10px rgba(245, 158, 11, 0.35);
+}
+
+.menu-price span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 3px;
+}
+
+/* 底部結帳總計列 (Cyber Glass Floating Dock) */
+.order-summary-bar {
+  background: linear-gradient(135deg, rgba(12, 20, 50, 0.78) 0%, rgba(6, 12, 34, 0.88) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  padding: 18px 24px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 8px;
+  border: 1px solid rgba(0, 245, 255, 0.45);
+  box-shadow: 
+    0 16px 44px rgba(0, 0, 0, 0.6),
+    0 0 24px rgba(0, 245, 255, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.38),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 640px) {
+  .order-summary-bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.summary-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summary-details {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.summary-details strong {
+  color: #ffffff;
+}
+
+.summary-total {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #fbbf24;
+  font-family: 'Outfit', sans-serif;
+  text-shadow: 0 2px 14px rgba(245, 158, 11, 0.45);
+}
+
+/* 高科技液態玻璃送出訂單按鈕 (Hero Cyber Liquid Glass Submit Button) */
+.submit-btn {
+  background: linear-gradient(135deg, rgba(0, 245, 255, 0.3) 0%, rgba(99, 102, 241, 0.35) 100%);
+  color: #ffffff;
+  border: 1px solid rgba(0, 245, 255, 0.75);
+  padding: 14px 36px;
+  border-radius: var(--radius-pill);
+  font-size: 1.05rem;
+  font-weight: 900;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.22s var(--ease-snappy), background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 
+    0 10px 30px rgba(0, 245, 255, 0.45),
+    0 0 20px rgba(0, 245, 255, 0.25),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.55),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.8px;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.submit-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: rotate(25deg);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.submit-btn:hover:not(:disabled)::after {
+  transform: translate(320%, 0) rotate(25deg);
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(0, 245, 255, 0.55) 0%, rgba(99, 102, 241, 0.6) 100%);
+  transform: translateY(-3px) scale(1.02);
+  border-color: #00f5ff;
+  box-shadow: 
+    0 14px 40px rgba(0, 245, 255, 0.65),
+    0 0 30px rgba(0, 245, 255, 0.45),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.8);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.submit-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* =========================================================
+   座位表專區（透明霧面課桌對照圖 - 共6排31人）
+   ========================================================= */
+.seating-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.blackboard-area {
+  background: rgba(7, 12, 28, 0.65);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  color: var(--cyber-cyan);
+  padding: 14px;
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-weight: 900;
+  letter-spacing: 3px;
+  border: var(--glass-border-cyan);
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.seating-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 10px 18px;
+  background: rgba(10, 18, 42, 0.45);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  border: var(--glass-border-subtle);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.legend-ordered {
+  background: rgba(0, 255, 136, 0.25);
+  border: 1.5px solid var(--cyber-emerald);
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+}
+
+.legend-unorder {
+  background: rgba(12, 20, 44, 0.6);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+}
+
+.mobile-hint-badge {
+  display: none;
+  background: rgba(0, 245, 255, 0.08);
+  border: 1px solid rgba(0, 245, 255, 0.3);
+  color: var(--cyber-cyan);
+  padding: 9px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.82rem;
+  text-align: center;
+  font-weight: 700;
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+}
+
+/* 座位網格排數（1~6排）- 支援手機流暢滑動 */
+.seating-classroom {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 4px;
+}
+
+.seating-row-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row-header-label {
+  font-size: 0.92rem;
+  font-weight: 900;
+  color: #7dd3fc;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.5px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.seating-row-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+/* 單個課桌卡片（高科技透明霧面玻璃 HUD 課桌按鈕） */
+.desk-card {
+  background: linear-gradient(145deg, rgba(13, 21, 48, 0.55) 0%, rgba(8, 14, 34, 0.68) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 120px;
+  position: relative;
+  transition: transform 0.18s var(--ease-snappy), border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  cursor: pointer;
+  box-shadow: 
+    0 6px 18px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.desk-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 0 16px rgba(0, 245, 255, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  border-color: rgba(0, 245, 255, 0.5);
+  background: linear-gradient(145deg, rgba(18, 30, 66, 0.68) 0%, rgba(11, 18, 44, 0.78) 100%);
+}
+
+.desk-card:active {
+  transform: scale(0.97);
+}
+
+/* 點餐跳動動畫效果 */
+.desk-card.pulse-highlight {
+  animation: deskPulseCyber 1.2s ease 3;
+}
+
+@keyframes deskPulseCyber {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.8);
+    border-color: var(--cyber-emerald);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 0 28px 8px rgba(0, 255, 136, 0.55);
+    border-color: #ffffff;
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+  }
+}
+
+/* 已點餐狀態（翠綠透明霧面光暈） */
+.desk-card.ordered {
+  background: linear-gradient(160deg, rgba(0, 255, 136, 0.16) 0%, rgba(5, 34, 22, 0.78) 100%);
+  border-color: rgba(0, 255, 136, 0.6);
+  box-shadow: 
+    0 8px 24px rgba(0, 255, 136, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38);
+}
+
+.desk-card.ordered::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00ff88, #34d399, #00ff88);
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+  box-shadow: 0 0 10px var(--cyber-emerald);
+}
+
+.desk-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.desk-seat-num {
+  font-size: 0.8rem;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  font-family: 'JetBrains Mono', monospace;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.desk-card.ordered .desk-seat-num {
+  background: rgba(0, 255, 136, 0.2);
+  color: #a7f3d0;
+  border-color: rgba(0, 255, 136, 0.4);
+}
+
+.desk-student-name {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.desk-meal-info {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: var(--radius-xs);
+  padding: 6px 9px;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+}
+
+.desk-meal-name {
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: #6ee7b7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.desk-meal-price {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #fbbf24;
+  font-family: 'Outfit', sans-serif;
+}
+
+.desk-empty-meal {
+  color: var(--text-dim);
+  font-size: 0.84rem;
+  font-style: italic;
+}
+
+.desk-card.empty-slot {
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  opacity: 0.25;
+  cursor: default;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+}
+
+/* =========================================================
+   統計管理後台（高科技透明霧面管理控制台）
+   ========================================================= */
+.admin-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.admin-actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* 霧面液態玻璃通用操作按鈕 */
+.action-btn {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #f1f5f9;
+  padding: 9px 20px;
+  border-radius: var(--radius-pill);
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s var(--ease-snappy), background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.35),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.25);
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.action-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: rotate(25deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+
+.action-btn:hover::after {
+  transform: translate(300%, 0) rotate(25deg);
+}
+
+.action-btn:hover {
+  background: linear-gradient(135deg, rgba(0, 245, 255, 0.22) 0%, rgba(99, 102, 241, 0.18) 100%);
+  border-color: rgba(0, 245, 255, 0.65);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 24px rgba(0, 245, 255, 0.35),
+    0 0 16px rgba(0, 245, 255, 0.2),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.5);
+}
+
+.action-btn:active {
+  transform: scale(0.97);
+}
+
+.btn-print:hover {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: rgba(99, 102, 241, 0.7);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+.btn-export:hover {
+  background: rgba(0, 255, 136, 0.2);
+  border-color: rgba(0, 255, 136, 0.65);
+  box-shadow: 0 6px 20px rgba(0, 255, 136, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+.btn-reset:hover {
+  background: rgba(255, 0, 127, 0.22);
+  border-color: rgba(255, 0, 127, 0.7);
+  color: #fda4af;
+  box-shadow: 0 6px 20px rgba(255, 0, 127, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+/* KPI 卡片網格 */
+.stats-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.kpi-card {
+  background: rgba(11, 19, 44, 0.45);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kpi-title {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.kpi-value {
+  font-size: 1.85rem;
+  font-weight: 900;
+  font-family: 'Outfit', sans-serif;
+  color: #ffffff;
+}
+
+.kpi-value.highlight-green {
+  color: #34d399;
+  text-shadow: 0 0 14px rgba(0, 255, 136, 0.35);
+}
+
+.kpi-value.highlight-amber {
+  color: #fbbf24;
+  text-shadow: 0 0 14px rgba(255, 214, 0, 0.35);
+}
+
+/* 未點餐提醒框 */
+.unorder-alert-box {
+  background: rgba(255, 214, 0, 0.05);
+  border: 1px solid rgba(255, 214, 0, 0.3);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+}
+
+.copy-unorder-glass-btn {
+  background: rgba(255, 214, 0, 0.12) !important;
+  color: #fef08a !important;
+  border: 1px solid rgba(255, 214, 0, 0.45) !important;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  border-radius: var(--radius-pill);
+}
+
+.copy-unorder-glass-btn:hover {
+  background: rgba(255, 214, 0, 0.25) !important;
+  box-shadow: 0 4px 16px rgba(255, 214, 0, 0.35);
+  transform: translateY(-2px);
+}
+
+.unorder-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.unorder-student-tag {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 214, 0, 0.35);
+  color: #fef08a;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'JetBrains Mono', monospace;
+  touch-action: manipulation;
+}
+
+.unorder-student-tag:hover {
+  background: rgba(255, 214, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+/* 統計摘要面板 */
+.summary-box {
+  background: rgba(11, 19, 44, 0.45);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.summary-box-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meal-stat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.meal-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.stat-bar-container {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00f5ff, #00ff88);
+  border-radius: var(--radius-pill);
+  transition: width 0.4s var(--ease-snappy);
+}
+
+/* 數據表格 */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.data-table th, .data-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.data-table th {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+  font-weight: 800;
+  font-size: 0.84rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* 全班動態抽屜 */
+.activity-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 380px;
+  height: 100vh;
+  background: rgba(8, 14, 32, 0.92);
+  backdrop-filter: var(--glass-blur-heavy);
+  -webkit-backdrop-filter: var(--glass-blur-heavy);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.7);
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s var(--ease-snappy);
+}
+
+.activity-drawer.open {
+  transform: translateX(0);
+}
+
+.activity-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.activity-list {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activity-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.activity-item-time {
+  font-size: 0.75rem;
+  color: var(--cyber-cyan);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.activity-item-title {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.activity-item-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* =========================================================
+   浮動 Toast 即時廣播通知
+   ========================================================= */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 99999;
+  pointer-events: none;
+}
+
+.toast-item {
+  background: rgba(8, 14, 32, 0.88);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(0, 245, 255, 0.45);
+  box-shadow: 
+    0 12px 30px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(0, 245, 255, 0.25);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 280px;
+  max-width: 360px;
+  pointer-events: auto;
+  animation: slideToastIn 0.32s var(--ease-snappy);
+}
+
+.toast-item.cancel-toast {
+  border-color: rgba(255, 0, 127, 0.5);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 0, 127, 0.25);
+}
+
+.toast-icon {
+  font-size: 1.4rem;
+}
+
+.toast-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toast-title {
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.toast-msg {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+@keyframes slideToastIn {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* =========================================================
+   手機端專屬極致流暢與 RWD 排版優化（120FPS / 60FPS 零卡頓、零跑版）
+   ========================================================= */
+@media (max-width: 768px) {
+  /* 手機端：隱藏額外 orb，保留主視覺四層，大幅降低 GPU 負擔 */
+  .orb-blue,
+  .orb-rose {
+    display: none;
+  }
+
+  /* 手機專用：降低剩餘 orb 目標色彩強度 */
+  .orb-cyan { opacity: 0.75; }
+  .orb-purple { opacity: 0.7; }
+  .orb-emerald { opacity: 0.65; }
+  .orb-amber { opacity: 0.7; }
+
+  .mobile-hint-badge {
+    display: block;
+  }
+
+  /* 避免 iOS Safari 在點擊 select 或 password 輸入框時自動放大頁面 */
+  .form-select,
+  .form-input,
+  input[type="text"],
+  input[type="password"],
+  select {
+    font-size: 16px !important;
+  }
+
+  /* 手機端標題與頂部導航優化 */
+  .system-header {
+    padding: 12px 14px;
+  }
+
+  .system-title {
+    font-size: 1.25rem;
+    line-height: 1.35;
+  }
+
+  .badge-tag {
+    font-size: 0.72rem;
+    padding: 2px 10px;
+    margin-bottom: 4px;
+  }
+
+  .header-status-group {
+    gap: 6px;
+  }
+
+  .live-indicator,
+  .header-btn {
+    padding: 5px 12px;
+    font-size: 0.76rem;
+  }
+
+  /* 手機端導覽分頁（不換列、不擠壓、滿寬度） */
+  .nav-tabs {
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .tab-button {
+    padding: 10px 6px;
+    font-size: 0.85rem;
+    min-width: 0;
+    flex: 1;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  /* 點餐結帳總計列：手機端底部吸附固定 Dock（無需滑到底部即可快速下單！） */
+  .order-summary-bar {
+    position: sticky;
+    bottom: 12px;
+    z-index: 900;
+    padding: 14px 16px;
+    margin-top: 12px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(8, 16, 42, 0.94) 0%, rgba(5, 10, 28, 0.98) 100%);
+    box-shadow: 
+      0 -8px 30px rgba(0, 0, 0, 0.75),
+      0 0 25px rgba(0, 245, 255, 0.35),
+      inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 13px 20px;
+    font-size: 0.98rem;
+  }
+
+  /* 手機端頂層浮動元素保留霧面通透質感 (10px 輕量模糊) */
+  .system-header,
+  .nav-tabs,
+  .live-broadcast-banner,
+  .order-summary-bar,
+  .toast-item,
+  .activity-drawer {
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+
+  /* 密集重複子元件完全不疊加 backdrop-filter，採用硬體加速高光漸層，手機徹底告別卡頓！ */
+  .card-section,
+  .menu-card,
+  .desk-card,
+  .student-auth-panel,
+  .student-status-box,
+  .kpi-card,
+  .summary-box {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* 提升手機點擊響應速度，去除 300ms 觸控延遲與點擊灰框 */
+  button,
+  .tab-button,
+  .menu-card,
+  .desk-card,
+  .action-btn,
+  .header-btn,
+  .submit-btn,
+  .cancel-btn,
+  .unorder-student-tag {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .card-section {
+    padding: 16px 12px;
+    border-radius: var(--radius-lg);
+  }
+
+  .menu-items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .menu-card {
+    padding: 12px 10px;
+    min-height: 105px;
+  }
+
+  .menu-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 1.15rem;
+  }
+
+  .menu-name {
+    font-size: 0.88rem;
+  }
+
+  .menu-price {
+    font-size: 1.12rem;
+  }
+
+  .seating-row-grid {
+    grid-template-columns: repeat(6, minmax(130px, 1fr));
+    gap: 8px;
+  }
+
+  .desk-card {
+    padding: 10px 8px;
+    min-height: 105px;
+  }
+
+  .desk-student-name {
+    font-size: 0.95rem;
+  }
+
+  .toast-container {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .toast-item {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .activity-drawer {
+    width: 88vw;
+    max-width: 340px;
+  }
+}
+
+
+/* 列印專用樣式 */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0 !important;
+  }
+
+  .system-header,
+  .live-broadcast-banner,
+  .live-ticker-bar,
+  .nav-tabs,
+  #order-tab-content,
+  #admin-tab-content,
+  .toast-container,
+  .activity-drawer,
+  .mobile-hint-badge,
+  .action-btn {
+    display: none !important;
+  }
+
+  #seating-tab-content {
+    display: block !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .print-banner {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .print-banner h1 {
+    font-size: 16pt;
+    font-weight: 900;
+    color: #000000 !important;
+  }
+
+  .desk-card {
+    background: #ffffff !important;
+    border: 1.5px solid #000000 !important;
+    color: #000000 !important;
+    break-inside: avoid;
+  }
+
+  .desk-card.ordered {
+    background: #f1f5f9 !important;
+    border: 2px solid #000000 !important;
+  }
+
+  .print-footer-summary {
+    display: flex !important;
+    justify-content: space-between;
+    margin-top: 14px;
+    border-top: 1.5px solid #000000;
+    padding-top: 8px;
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #000000 !important;
+  }
+}
+
+/* =========================================================
+   推播通知按鈕活躍狀態（背景 MQTT 連線中）
+   ========================================================= */
+@keyframes push-btn-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(0, 245, 255, 0.4),
+                0 0 20px rgba(0, 245, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(0, 245, 255, 0.7),
+                0 0 36px rgba(0, 245, 255, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+}
+
+.push-notify-btn.notify-active {
+  animation: push-btn-pulse 2.2s ease-in-out infinite;
+  background: linear-gradient(135deg, rgba(0, 245, 255, 0.22) 0%, rgba(99, 102, 241, 0.28) 100%) !important;
+  border-color: rgba(0, 245, 255, 0.65) !important;
+  color: #00f5ff !important;
+}
+
+/* Toast 容器（浮動通知） */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+  max-width: 340px;
+}
+
+.toast-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, rgba(10, 20, 50, 0.92) 0%, rgba(15, 25, 60, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 245, 255, 0.35);
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 245, 255, 0.15);
+  color: #e2e8f0;
+  font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+  font-size: 0.88rem;
+  pointer-events: auto;
+  animation: toast-slide-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.toast-item.cancel-toast {
+  border-color: rgba(255, 0, 127, 0.35);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 0, 127, 0.15);
+}
+
+@keyframes toast-slide-in {
+  from { opacity: 0; transform: translateX(80px) scale(0.9); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.toast-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.toast-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-title {
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toast-msg {
+  font-size: 0.82rem;
+  color: rgba(148, 163, 184, 0.9);
+  line-height: 1.4;
+}
+
+/* =========================================================
+   高級微光閃耀質感 (Refined Premium Cyber Sparkle & Shimmer FX)
+   優雅流暢動效：呈現水晶折射與流光質感，絕不誇張刺眼
+   ========================================================= */
+
+/* 1. 送出按鈕自動絹絲流光掃過 */
+@keyframes autoShimmerSweep {
+  0% { transform: translate(-120%, 0) rotate(25deg); opacity: 0; }
+  15% { opacity: 0.85; }
+  35% { transform: translate(380%, 0) rotate(25deg); opacity: 0; }
+  100% { transform: translate(380%, 0) rotate(25deg); opacity: 0; }
+}
+
+.submit-btn:not(:disabled)::after {
+  animation: autoShimmerSweep 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* 2. 送出按鈕與亮點按鈕優雅呼吸霓光 */
+@keyframes submitGlowPulse {
+  0% {
+    box-shadow: 
+      0 8px 24px rgba(0, 245, 255, 0.38),
+      0 0 16px rgba(0, 245, 255, 0.2),
+      inset 0 1.5px 1.5px rgba(255, 255, 255, 0.55);
+    border-color: rgba(0, 245, 255, 0.65);
+  }
+  50% {
+    box-shadow: 
+      0 12px 36px rgba(0, 245, 255, 0.58),
+      0 0 28px rgba(0, 245, 255, 0.45),
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.8);
+    border-color: rgba(0, 245, 255, 0.95);
+  }
+  100% {
+    box-shadow: 
+      0 8px 24px rgba(0, 245, 255, 0.38),
+      0 0 16px rgba(0, 245, 255, 0.2),
+      inset 0 1.5px 1.5px rgba(255, 255, 255, 0.55);
+    border-color: rgba(0, 245, 255, 0.65);
+  }
+}
+
+.submit-btn:not(:disabled) {
+  animation: submitGlowPulse 3.8s ease-in-out infinite;
+}
+
+/* 3. 面板卡片頂部彩虹極光邊條微妙光澤流動 */
+@keyframes shiftPrismaticRim {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.card-section::before {
+  background-size: 200% 200% !important;
+  animation: shiftPrismaticRim 7.5s linear infinite !important;
+}
+
+/* 4. 已選擇餐點卡片與已點課桌的閃耀脈衝 */
+@keyframes selectedCardGlow {
+  0% {
+    border-color: rgba(0, 245, 255, 0.6);
+    box-shadow: 0 8px 24px rgba(0, 245, 255, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  }
+  50% {
+    border-color: rgba(0, 245, 255, 0.95);
+    box-shadow: 0 12px 32px rgba(0, 245, 255, 0.45), inset 0 1px 1.5px rgba(255, 255, 255, 0.65);
+  }
+  100% {
+    border-color: rgba(0, 245, 255, 0.6);
+    box-shadow: 0 8px 24px rgba(0, 245, 255, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  }
+}
+
+.menu-card.selected {
+  animation: selectedCardGlow 3.2s ease-in-out infinite alternate;
+}
+
+/* 5. 分頁 Tab 頂部細緻光學流線 */
+.tab-button.active {
+  position: relative;
+}
+
+.tab-button.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, #00f5ff, #00ff88, transparent);
+  box-shadow: 0 0 10px #00f5ff;
+  border-radius: 999px;
+}
+
